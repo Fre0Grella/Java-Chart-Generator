@@ -1,3 +1,5 @@
+package util;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -25,13 +27,13 @@ public class ChartGenerator {
      * @param dataSeries    A list of tuples containing the X values, Y values, and label for each series.
      */
     public static void createLineChart(String outputPath, String title, String xAxisLabel, String yAxisLabel,
-                                       boolean isPercentage, List<DataSeries<List<Double>, List<Double>, String>> dataSeries) {
+                                       boolean isPercentage, List<DataSeries> dataSeries) {
         XYSeriesCollection dataset = new XYSeriesCollection();
 
-        for (DataSeries<List<Double>, List<Double>, String> seriesData : dataSeries) {
-            XYSeries series = new XYSeries(seriesData.third);
-            List<Double> xData = seriesData.first;
-            List<Double> yData = seriesData.second;
+        for (var seriesData : dataSeries) {
+            XYSeries series = new XYSeries(seriesData.label);
+            List<Number> xData = seriesData.xData;
+            List<Number> yData = seriesData.yData;
             for (int i = 0; i < xData.size(); i++) {
                 series.add(xData.get(i), yData.get(i));
             }
@@ -77,7 +79,7 @@ public class ChartGenerator {
 
         // Configure line styles and markers with rainbow colors
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        Color[] rainbowColors = {Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.BLUE, Color.MAGENTA};
+        Color[] rainbowColors = {Color.RED, Color.BLUE, Color.GREEN, Color.ORANGE, Color.MAGENTA, Color.CYAN};
         for (int i = 0; i < dataSeries.size(); i++) {
             renderer.setSeriesShapesVisible(i, true);
             renderer.setSeriesPaint(i, rainbowColors[i % rainbowColors.length]);
@@ -99,26 +101,53 @@ public class ChartGenerator {
 
     public static void main(String[] args) {
         // Example usage
+        var ciao = new DataSeries(List.of(3.0,4.0,5.0),List.of(4.0,5.0,6.0),"ciao");
         createLineChart(
                 "strongScalingChart.png",
                 "Strong scaling efficiency",
                 "N. of cores",
                 "Efficiency",
-                true,
+                false,
                 List.of(
-                        new DataSeries<>(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
                                 List.of(100.0, 99.0, 99.5, 99.7, 99.8, 99.9, 99.6, 99.5, 99.3, 99.2, 99.0, 97.0),
                                 "N large, IT small"),
-                        new DataSeries<>(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
-                                List.of(100.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
-                                "N small, IT large")
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+                                List.of(95.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
+                                "N "),
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+                                List.of(150.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
+                                "Na"),
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+                                List.of(10.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
+                                "N small, IT "),
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+                                List.of(130.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
+                                "N small,  large"),
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+                                List.of(90.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
+                                "N , IT large"),
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+                                List.of(180.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
+                                "N smalle"),
+
+                        new DataSeries(List.of(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0),
+                                List.of(120.0, 95.0, 92.0, 90.0, 87.0, 85.0, 80.0, 75.0, 70.0, 65.0, 60.0, 50.0),
+                                "N smrge")
                 )
         );
     }
 
     /**
-         * A helper class to store three related objects together.
-         */
-        public record DataSeries<T, U, V>(T first, U second, V third) {
+     * A helper class to store three related objects together.
+     */
+    public record DataSeries(List<Number> xData, List<Number> yData, String label) {
     }
 }
